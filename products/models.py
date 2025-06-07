@@ -1,34 +1,11 @@
 from django.db import models
+
 from core.models import BaseModel
-from django.db.models import TextChoices
+from accounts.models import Fornecedor
+from core.choices import CATEGORIA_PRODUTO_CHOICES, UNIDADE_MEDIDA_CHOICES
+
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, RegexValidator
-
-
-class Categoria(TextChoices):
-    """
-    Categorias possíveis para produtos do mercado.
-    """
-    HORTIFRUTI = 'HORTIFRUTI', 'Hortifrúti'
-    CARNES = 'CARNES', 'Carnes'
-    BEBIDAS = 'BEBIDAS', 'Bebidas'
-    PADARIA = 'PADARIA', 'Padaria'
-    LATICINIOS = 'LATICINIOS', 'Laticínios'
-    MERCEARIA = 'MERCEARIA', 'Mercearia'
-    LIMPEZA = 'LIMPEZA', 'Limpeza'
-    HIGIENE = 'HIGIENE', 'Higiene e Beleza'
-    CONGELADOS = 'CONGELADOS', 'Congelados'
-    PET = 'PET', 'Pet'
-
-
-class UnidadeMedida(TextChoices):
-    """
-    Unidades de medida válidas para os produtos.
-    """
-    UNIDADE = 'UN', 'Unidade'
-    QUILO = 'KG', 'Quilo'
-    LITRO = 'L', 'Litro'
-    METRO = 'M', 'Metro'
+from django.core.validators import MinValueValidator
 
 
 class Marca(BaseModel):
@@ -49,33 +26,6 @@ class Marca(BaseModel):
         return self.nome
 
 
-class Fornecedor(BaseModel):
-    """
-    Modelo para representar fornecedores dos produtos.
-    """
-    nome = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    telefone = models.CharField(
-        max_length=15,
-        validators=[RegexValidator(
-            regex=r'^\+?\d{9,15}$',
-            message='Telefone deve conter entre 9 e 15 dígitos, podendo começar com +'
-        )],
-        help_text='Número de telefone com código de país, ex: +5511999999999'
-    )
-
-    class Meta:
-        verbose_name = 'Fornecedor'
-        verbose_name_plural = 'Fornecedores'
-        ordering = ['-criacao']
-
-    def __str__(self):
-        """
-        Retorna o nome do fornecedor para representação em texto.
-        """
-        return self.nome
-
-
 class Produto(BaseModel):
     """
     Modelo que representa um produto vendido no mercado.
@@ -88,10 +38,11 @@ class Produto(BaseModel):
         validators=[MinValueValidator(
             0.01, message='O preço deve ser maior que zero')]
     )
-    categoria = models.CharField(max_length=50, choices=Categoria.choices)
+    categoria = models.CharField(
+        max_length=50, choices=CATEGORIA_PRODUTO_CHOICES)
     imagem = models.ImageField(upload_to='produtos/', null=True, blank=True)
     unidade_medida = models.CharField(
-        max_length=3, choices=UnidadeMedida.choices)
+        max_length=3, choices=UNIDADE_MEDIDA_CHOICES)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
 
@@ -111,10 +62,10 @@ class Produto(BaseModel):
             raise ValidationError(
                 {'preco': 'O preço não pode ser menor ou igual a zero.'})
 
-        if self.categoria not in Categoria.values:
+        if self.categoria not in [choice[0] for choice in CATEGORIA_PRODUTO_CHOICES]:
             raise ValidationError({'categoria': 'Categoria inválida.'})
 
-        if self.unidade_medida not in UnidadeMedida.values:
+        if self.unidade_medida not in [choice[0] for choice in UNIDADE_MEDIDA_CHOICES]:
             raise ValidationError(
                 {'unidade_medida': 'Unidade de medida inválida.'})
 

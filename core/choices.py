@@ -1,85 +1,67 @@
+from enum import Enum
+
 """
 Choices para os modelos do sistema.
 Define opções fixas usadas em campos de modelos, para padronizar dados.
 """
 
+"""
+Lista de estados brasileiros para uso em campos de escolha.
 
-class EstadoChoices:
-    """
-    Lista de estados brasileiros para uso em campos de escolha.
+Atributos:
+    - CHOICES (list): Tuplas com sigla do estado e nome completo.
+    - __str__ (str): Retorna a sigla do estado.
+    - choices (list): Retorna uma lista de tuplas com sigla e nome do estado.
+"""
 
-    Atributos:
-        CHOICES (list): Tuplas com sigla do estado e nome completo.
-    """
-    AC = 'AC'
-    AL = 'AL'
-    AP = 'AP'
-    AM = 'AM'
-    BA = 'BA'
-    CE = 'CE'
-    DF = 'DF'
-    ES = 'ES'
-    GO = 'GO'
-    MA = 'MA'
-    MT = 'MT'
-    MS = 'MS'
-    MG = 'MG'
-    PA = 'PA'
-    PB = 'PB'
-    PR = 'PR'
-    PE = 'PE'
-    PI = 'PI'
-    RJ = 'RJ'
-    RN = 'RN'
-    RS = 'RS'
-    RO = 'RO'
-    RR = 'RR'
-    SC = 'SC'
-    SP = 'SP'
-    SE = 'SE'
-    TO = 'TO'
 
-    CHOICES = [
-        (AC, 'Acre'),
-        (AL, 'Alagoas'),
-        (AP, 'Amapá'),
-        (AM, 'Amazonas'),
-        (BA, 'Bahia'),
-        (CE, 'Ceará'),
-        (DF, 'Distrito Federal'),
-        (ES, 'Espírito Santo'),
-        (GO, 'Goiás'),
-        (MA, 'Maranhão'),
-        (MT, 'Mato Grosso'),
-        (MS, 'Mato Grosso do Sul'),
-        (MG, 'Minas Gerais'),
-        (PA, 'Pará'),
-        (PB, 'Paraíba'),
-        (PR, 'Paraná'),
-        (PE, 'Pernambuco'),
-        (PI, 'Piauí'),
-        (RJ, 'Rio de Janeiro'),
-        (RN, 'Rio Grande do Norte'),
-        (RS, 'Rio Grande do Sul'),
-        (RO, 'Rondônia'),
-        (RR, 'Roraima'),
-        (SC, 'Santa Catarina'),
-        (SP, 'São Paulo'),
-        (SE, 'Sergipe'),
-        (TO, 'Tocantins'),
-    ]
+class EstadoChoices(Enum):
+    AC = ('AC', 'Acre')
+    AL = ('AL', 'Alagoas')
+    AP = ('AP', 'Amapá')
+    AM = ('AM', 'Amazonas')
+    BA = ('BA', 'Bahia')
+    CE = ('CE', 'Ceará')
+    DF = ('DF', 'Distrito Federal')
+    ES = ('ES', 'Espírito Santo')
+    GO = ('GO', 'Goiás')
+    MA = ('MA', 'Maranhão')
+    MT = ('MT', 'Mato Grosso')
+    MS = ('MS', 'Mato Grosso do Sul')
+    MG = ('MG', 'Minas Gerais')
+    PA = ('PA', 'Pará')
+    PB = ('PB', 'Paraíba')
+    PR = ('PR', 'Paraná')
+    PE = ('PE', 'Pernambuco')
+    PI = ('PI', 'Piauí')
+    RJ = ('RJ', 'Rio de Janeiro')
+    RN = ('RN', 'Rio Grande do Norte')
+    RS = ('RS', 'Rio Grande do Sul')
+    RO = ('RO', 'Rondônia')
+    RR = ('RR', 'Roraima')
+    SC = ('SC', 'Santa Catarina')
+    SP = ('SP', 'São Paulo')
+    SE = ('SE', 'Sergipe')
+    TO = ('TO', 'Tocantins')
 
+    @classmethod
+    def choices(cls):
+        return [(member.value[0], member.value[1]) for member in cls]
+
+    def __str__(self):
+        return self.value[0]
+
+
+TIPO_USUARIO_CHOICES = [
+    ('FUN', 'Funcionário'),
+    ('CLI', 'Cliente'),
+    ('FOR', 'Fornecedor'),
+]
 
 # Choices para o sexo do usuário
 SEXO_CHOICES = [
     ('M', 'Masculino'),
     ('F', 'Feminino'),
-]
-
-# Choices para o tipo de usuário
-TIPO_USUARIOS_CHOICES = [
-    ('FUN', 'Funcionário'),
-    ('CLI', 'Cliente'),
 ]
 
 # Choices para o status do pagamento
@@ -102,4 +84,36 @@ STATUS_ENTREGA_CHOICES = [
     ('PENDENTE', 'Pendente'),
     ('ENTREGUE', 'Entregue'),
     ('DEVOLVIDO', 'Devolvido'),
+]
+
+# Status do pedido
+STATUS_PEDIDO_CHOICES = [
+    ('PENDENTE', 'Pendente'),
+    ('EM_PROGRESSO', 'Em Progresso'),
+    ('ENTREGUE', 'Entregue'),
+    ('CANCELADO', 'Cancelado'),
+]
+
+
+# Categorias possíveis para produtos do mercado.
+CATEGORIA_PRODUTO_CHOICES = [
+
+    ('HORTIFRUTI', 'Hortifrúti'),
+    ('CARNES', 'Carnes'),
+    ('BEBIDAS', 'Bebidas'),
+    ('PADARIA', 'Padaria'),
+    ('LATICINIOS', 'Laticínios'),
+    ('MERCEARIA', 'Mercearia'),
+    ('LIMPEZA', 'Limpeza'),
+    ('HIGIENE', 'Higiene e Beleza'),
+    ('CONGELADOS', 'Congelados'),
+    ('PET', 'Pet'),
+]
+
+# Unidades de medida válidas para os produtos.
+UNIDADE_MEDIDA_CHOICES = [
+    ('UN', 'Unidade'),
+    ('KG', 'Quilo'),
+    ('L', 'Litro'),
+    ('M', 'Metro'),
 ]
