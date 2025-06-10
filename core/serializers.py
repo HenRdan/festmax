@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import EnderecoModel
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
@@ -25,3 +26,12 @@ class BaseUserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class EnderecoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnderecoModel
+        fields = '__all__'
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }

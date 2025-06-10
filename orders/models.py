@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import BaseModel, EnderecoModel
-from core.choices import STATUS_PEDIDO_CHOICES, FORMA_PAGAMENTO_CHOICES, STATUS_PAGAMENTO_CHOICES, STATUS_ENTREGA_CHOICES
+from core.choices import FORMA_PAGAMENTO_CHOICES, STATUS_PAGAMENTO_CHOICES, STATUS_ENTREGA_CHOICES
 
 from accounts.models import Cliente
 
@@ -13,8 +13,6 @@ class Pedido(BaseModel):
     """
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     data_pedido = models.DateTimeField(auto_now_add=True)
-    status_pedido = models.CharField(
-        max_length=20, choices=STATUS_PEDIDO_CHOICES)
     observacoes = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -28,6 +26,26 @@ class Pedido(BaseModel):
     @property
     def valor_total(self):
         return sum(item.subtotal() for item in self.itens.all())
+
+    @property
+    def status_pedido(self):
+        pagamentos = self.pagamentos_set.all()
+        entregas = self.entregas_set.all()
+
+        # Nenhum pagamento registrado ainda
+        if not pagamentos.exists():
+            return 'PENDENTE'
+
+        # Tem pagamento pendente
+        if any(p.status_pagamento == 'PENDENTE' for p in pagamentos):
+            return 'PENDENTE'
+
+        # Pagamento ok, agora olha a entrega
+        if entregas.exists() and all(e.status_entrega == 'ENTREGUE' for e in entregas):
+            return 'ENTREGUE'
+
+        # Pagamento feito, mais entrega rolando
+        return 'EM_PROGRESSO'
 
 
 class ItemPedido(BaseModel):
