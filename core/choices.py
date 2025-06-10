@@ -80,20 +80,10 @@ FORMA_PAGAMENTO_CHOICES = [
 
 # Choices para o status da entrega
 STATUS_ENTREGA_CHOICES = [
-    ('AGUARDANDO', 'Aguardando Envio'),
     ('PENDENTE', 'Pendente'),
     ('ENTREGUE', 'Entregue'),
     ('DEVOLVIDO', 'Devolvido'),
 ]
-
-# Status do pedido
-STATUS_PEDIDO_CHOICES = [
-    ('PENDENTE', 'Pendente'),
-    ('EM_PROGRESSO', 'Em Progresso'),
-    ('ENTREGUE', 'Entregue'),
-    ('CANCELADO', 'Cancelado'),
-]
-
 
 # Categorias possíveis para produtos do mercado.
 CATEGORIA_PRODUTO_CHOICES = [

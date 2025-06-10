@@ -15,11 +15,6 @@ class Pedido(BaseModel):
     data_pedido = models.DateTimeField(auto_now_add=True)
     status_pedido = models.CharField(
         max_length=20, choices=STATUS_PEDIDO_CHOICES)
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
-    forma_pagamento = models.CharField(
-        max_length=20, choices=FORMA_PAGAMENTO_CHOICES)
-    endereco_entrega = models.ForeignKey(
-        EnderecoModel, on_delete=models.CASCADE)
     observacoes = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -29,6 +24,10 @@ class Pedido(BaseModel):
 
     def __str__(self):
         return f"Pedido {self.id} - {self.cliente.nome}"
+
+    @property
+    def valor_total(self):
+        return sum(item.subtotal() for item in self.itens.all())
 
 
 class ItemPedido(BaseModel):
@@ -56,7 +55,8 @@ class Pagamento(BaseModel):
     """
     Modelo para representar um pagamento de pedido.
     """
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(
+        Pedido, on_delete=models.CASCADE, related_name='pagamentos')
     valor_pago = models.DecimalField(max_digits=10, decimal_places=2)
     data_pagamento = models.DateTimeField(auto_now_add=True)
     status_pagamento = models.CharField(
@@ -77,7 +77,8 @@ class Entrega(BaseModel):
     """
     Modelo para representar uma entrega de pedido.
     """
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(
+        Pedido, on_delete=models.CASCADE, related_name='entregas')
     endereco_entrega = models.ForeignKey(
         EnderecoModel, on_delete=models.CASCADE)
     status_entrega = models.CharField(
