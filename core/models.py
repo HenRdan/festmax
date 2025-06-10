@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, Group, Permission
 from core.choices import TIPO_USUARIO_CHOICES, EstadoChoices
 from django.contrib.auth.models import AbstractUser
 from core.validators import cep_validator, telefone_validator, cpf_validator, cnpj_validator
@@ -49,6 +50,22 @@ class UserBaseModel(AbstractUser):
         Retorna o nome completo do usuário.
         """
         return f"{self.first_name or ''} {self.last_name or ''}".strip()
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name="%(app_label)s_%(class)s_groups",
+        blank=True,
+        help_text="Grupos aos quais o usuário pertence",
+        verbose_name="Grupos"
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name="%(app_label)s_%(class)s_permissions",
+        blank=True,
+        help_text="Permissões específicas para este usuário",
+        verbose_name="Permissões"
+    )
 
 
 class EnderecoModel(BaseModel):

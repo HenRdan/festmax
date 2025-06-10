@@ -8,9 +8,10 @@ class Cliente(BaseModel, UserBaseModel):
     """
     Modelo para representar um cliente do sistema.
     """
-    cpf = models.CharField(max_length=14, validators=[cpf_validator])
-    data_nascimento = models.DateField()
-    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
+    cpf = models.CharField("CPF", max_length=14, validators=[
+                           cpf_validator], unique=True, null=False, blank=False)
+    data_nascimento = models.DateField("Data de Nascimento")
+    sexo = models.CharField("Sexo", max_length=1, choices=SEXO_CHOICES)
     endereco = models.ForeignKey(
         EnderecoModel, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -24,7 +25,8 @@ class Fornecedor(BaseModel, UserBaseModel):
     """
     Modelo para representar um fornecedor do sistema.
     """
-    cnpj = models.CharField(max_length=18, validators=[cnpj_validator])
+    cnpj = models.CharField("CNPJ", max_length=18, validators=[
+                            cnpj_validator], unique=True, null=False, blank=False)
     endereco = models.ForeignKey(
         EnderecoModel, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -38,11 +40,12 @@ class Funcionario(BaseModel, UserBaseModel):
     """
     Modelo para representar um funcionário do sistema.
     """
-    cpf = models.CharField(max_length=14, validators=[cpf_validator])
-    data_nascimento = models.DateField()
-    cargo = models.CharField(max_length=255)
-    salario = models.DecimalField(max_digits=10, decimal_places=2)
-    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
+    cpf = models.CharField(max_length=14, validators=[
+        cpf_validator], unique=True, null=False, blank=False)
+    data_nascimento = models.DateField("Data de Nascimento")
+    cargo = models.CharField("Cargo", max_length=255)
+    salario = models.DecimalField("Salário", max_digits=10, decimal_places=2)
+    sexo = models.CharField("Sexo", max_length=1, choices=SEXO_CHOICES)
     endereco = models.ForeignKey(
         EnderecoModel, on_delete=models.SET_NULL, null=True, blank=True)
 

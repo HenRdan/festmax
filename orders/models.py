@@ -14,10 +14,10 @@ class Pedido(BaseModel):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     data_pedido = models.DateTimeField(auto_now_add=True)
     status_pedido = models.CharField(
-        max_length=10, choices=STATUS_PEDIDO_CHOICES)
+        max_length=20, choices=STATUS_PEDIDO_CHOICES)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     forma_pagamento = models.CharField(
-        max_length=10, choices=FORMA_PAGAMENTO_CHOICES)
+        max_length=20, choices=FORMA_PAGAMENTO_CHOICES)
     endereco_entrega = models.ForeignKey(
         EnderecoModel, on_delete=models.CASCADE)
     observacoes = models.TextField(blank=True, null=True)
